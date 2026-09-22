@@ -1,0 +1,121 @@
+:root {
+    --ink: #19352f;
+    --muted: #6d817b;
+    --paper: #f4f7f1;
+    --panel: rgb(255 255 255 / 86%);
+    --line: #d8e3d9;
+    --accent: #e97451;
+    --accent-deep: #c95b3c;
+    --shadow: rgb(31 58 48 / 13%);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    margin: 0;
+    padding: clamp(2.5rem, 8vw, 6rem) 1.25rem;
+    color: var(--ink);
+    background:
+        radial-gradient(circle at 12% 8%, #dcead6 0 10rem, transparent 10.1rem),
+        radial-gradient(circle at 90% 90%, #f7dfc4 0 13rem, transparent 13.1rem),
+        var(--paper);
+    font-family: Georgia, 'Times New Roman', serif;
+}
+
+.page-shell {
+    width: min(100%, 54rem);
+    margin: 0 auto;
+}
+
+.intro {
+    margin-bottom: 2rem;
+}
+
+.eyebrow {
+    margin: 0 0 0.8rem;
+    color: var(--accent-deep);
+    font-family: 'Trebuchet MS', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+
+h1 {
+    max-width: 30rem;
+    margin: 0;
+    font-size: clamp(2.5rem, 8vw, 5rem);
+    line-height: 0.94;
+    letter-spacing: 0;
+}
+
+.description {
+    margin: 1rem 0 0;
+    color: var(--muted);
+    font-size: 1.05rem;
+}
+
+.grid-panel {
+    padding: clamp(1.15rem, 4vw, 2rem);
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    box-shadow: 0 1.5rem 4rem var(--shadow);
+    backdrop-filter: blur(8px);
+}
+
+#error-message {
+    margin: 0 0 1rem;
+    padding: 0.75rem 1rem;
+    color: #8c2f21;
+    background: #fde8e2;
+    border: 1px solid #efb7a8;
+    border-radius: 5px;
+    font-family: 'Trebuchet MS', sans-serif;
+    font-size: 0.9rem;
+}
+
+#container {
+    display: grid;
+    grid-template-columns: repeat(10, minmax(1.4rem, 1fr));
+    gap: clamp(0.55rem, 2.3vw, 1rem);
+}
+
+#container input {
+    width: 100%;
+    aspect-ratio: 1;
+    margin: 0;
+    appearance: none;
+    background: #fff;
+    border: 2px solid #b9ccc0;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 160ms ease, border-color 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+}
+
+#container input:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 0.35rem 0.7rem rgb(201 91 60 / 16%);
+}
+
+#container input:checked {
+    background:
+        linear-gradient(135deg, transparent 42%, #fff 42% 51%, transparent 51%),
+        var(--accent);
+    border-color: var(--accent-deep);
+}
+
+#container input:focus-visible {
+    outline: 3px solid rgb(25 53 47 / 25%);
+    outline-offset: 3px;
+}
+
+@media (max-width: 30rem) {
+    #container {
+        grid-template-columns: repeat(5, minmax(2rem, 1fr));
+    }
+}

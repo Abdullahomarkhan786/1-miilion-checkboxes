@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkbox Garden</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <main class="page-shell">
+        <header class="intro">
+            <p class="eyebrow">Interactive grid</p>
+            <h1>Checkbox Garden</h1>
+            <p class="description">A small field of switches waiting for your input.</p>
+        </header>
+        <section class="grid-panel" aria-label="Checkbox grid">
+            <p id="error-message" role="alert" hidden></p>
+            <div id="container">
+        <script src="/socket.io/socket.io.js"></script>
+        <script>
+            const socket=io()
+            const container=document.getElementById("container")
+            const errorElement=document.getElementById('error-message')
+            const CHECKBOX_COUNT=1_000_000
+
+            socket.on('server:error',(data)=>{
+                errorElement.textContent=data.error
+                errorElement.hidden=false
+                if(data.index !== undefined){
+                    const input=document.getElementById(`checkbox-${data.index}`)
+                    if(input){
+                        input.checked=!data.checked
+                    }
+                }
+            })
+
+            socket.on('server:checkbox:changed',(data)=>{
+                console.log("socket server event",data)
+                const {index,checked}=data //destructure
+                const input=document.getElementById(`checkbox-${index}`)
+                if(input){
+                    input.checked=checked;
+                }
+
+
+            })
+
+
+            async function fetchStateFromBackend(){
+                //empty all children from container remove all check boxes first
+                while(container.firstChild){
+                    container.removeChild(container.firstChild)
+                }
+                
+                //now create all checkboxes again
+                const response=await fetch('checkboxes',{method:'GET'})
+                const data=await response.json()
+                if(data && data.checkboxes){ //if data contains checkboxes field
+                    data.checkboxes.forEach((serverValue,index)=>{
+                        const input=document.createElement('input')
+                        input.type='checkbox'
+                        input.id=`checkbox-${index}`
+                        input.checked=serverValue;
+                        
+                        input.addEventListener('change',event=>{
+                        const checked=event.target.checked;
+                        console.log('Checkbox changed',{index,checked})
+                        //client event of checkbox tells socket server what is happening
+                        socket.emit('client:checkbox:changed',{index,checked})
+                    })
+                    container.appendChild(input)
+
+                    })
+                }
+
+            }
+            //instead of maintaining in frontend we fetch from backend
+            window.addEventListener('load',async()=>{
+                fetchStateFromBackend();
+
+
+            })
+
+        </script>
+            </div>
+        </section>
+    </main>
+    
+</body>
+</html>
